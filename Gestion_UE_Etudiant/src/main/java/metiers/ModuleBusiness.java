@@ -10,6 +10,9 @@ public class ModuleBusiness {
     private static List<Module> modules;
 private UniteEnseignementBusiness uniteEnseignementBusiness=new UniteEnseignementBusiness();
     public ModuleBusiness() {
+        if (modules != null) {
+            return;
+        }
         modules = new ArrayList<Module>();
         // Initialisation avec quelques données de test
        modules.add(new Module("M101", "Algorithmique", 3, 30, Module.TypeModule.PROFESSIONNEL,uniteEnseignementBusiness.getUEByCode(1)));

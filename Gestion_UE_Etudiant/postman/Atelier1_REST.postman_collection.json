@@ -1,0 +1,322 @@
+{
+  "info": {
+    "name": "Atelier 1 REST - Gestion UE / Modules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection de test de l'Atelier REST n°1. Variable : baseUrl (Collection > Variables)."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081/Gestion_UE_VF_war_exploded/rest"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - Unités d'enseignement",
+      "item": [
+        {
+          "name": "1. Créer une UE (attendu 201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": 6,\n  \"domaine\": \"Réseaux\",\n  \"responsable\": \"M. Ali\",\n  \"credits\": 4,\n  \"semestre\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Lister toutes les UE (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. UE d'un semestre (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/unites?semestre=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ],
+              "query": [
+                {
+                  "key": "semestre",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Supprimer l'UE 6 (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/unites/6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites",
+                "6"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Modifier l'UE 6 (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/unites/6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites",
+                "6"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": 6,\n  \"domaine\": \"Réseaux\",\n  \"responsable\": \"M. Ali\",\n  \"credits\": 5,\n  \"semestre\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. UE par code (200 / 404 si absente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/unites/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites",
+                "1"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Modules",
+      "item": [
+        {
+          "name": "1. Créer un module (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/modules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"matricule\": \"M301\",\n  \"nom\": \"SOA\",\n  \"coefficient\": 2,\n  \"volumeHoraire\": 25,\n  \"type\": \"PROFESSIONNEL\",\n  \"uniteEnseignement\": {\n    \"code\": 1\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "2. Lister tous les modules (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/modules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "3. Module par matricule (200 / 404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/modules/M101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules",
+                "M101"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "4. Supprimer un module (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/modules/M301",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules",
+                "M301"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "5. Modifier un module (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/modules/M301",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules",
+                "M301"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"SOA avancé\",\n  \"coefficient\": 3,\n  \"volumeHoraire\": 30,\n  \"type\": \"RECHERCHE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "6. Modules d'une UE - codeUE (200 / 404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/modules/ue/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "modules",
+                "ue",
+                "1"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Test de base",
+      "item": [
+        {
+          "name": "Hello",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hello/hi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hello",
+                "hi"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    }
+  ]
+}
