@@ -1,5 +1,6 @@
 package webservices;
 
+import filtres.Secured;
 import entities.Module;
 import entities.UniteEnseignement;
 import metiers.ModuleBusiness;
@@ -24,6 +25,7 @@ public class ModuleRestApi {
     private ModuleBusiness moduleBusiness = new ModuleBusiness();
     private UniteEnseignementBusiness ueBusiness = new UniteEnseignementBusiness();
 
+    @Secured
     @POST
     public Response addModule(Module module) {
         if (module == null || module.getMatricule() == null) {
@@ -72,6 +74,7 @@ public class ModuleRestApi {
         return Response.ok(module).build();
     }
 
+    @Secured
     @DELETE
     @Path("/{matricule}")
     public Response deleteModule(@PathParam("matricule") String matricule) {
@@ -82,6 +85,7 @@ public class ModuleRestApi {
                 .entity("Module introuvable : " + matricule).build();
     }
 
+    @Secured
     @PUT
     @Path("/{matricule}")
     public Response updateModule(@PathParam("matricule") String matricule, Module module) {

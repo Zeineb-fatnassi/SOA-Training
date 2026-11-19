@@ -1,16 +1,149 @@
 {
   "info": {
-    "name": "Atelier 1 REST - Gestion UE / Modules",
+    "name": "Ateliers REST 1 et 5 - Gestion UE / Modules",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Collection de test de l'Atelier REST n°1. Variable : baseUrl (Collection > Variables)."
+    "description": "Atelier 1 : CRUD des UE et des modules. Atelier 5 : sécurité par jeton JWT (POST, PUT et DELETE exigent le jeton). Variables : baseUrl, token."
   },
   "variable": [
     {
       "key": "baseUrl",
       "value": "http://localhost:8081/Gestion_UE_VF_war_exploded/rest"
+    },
+    {
+      "key": "token",
+      "value": ""
     }
   ],
   "item": [
+    {
+      "name": "0 - Authentification",
+      "item": [
+        {
+          "name": "1. Obtenir un jeton - formulaire (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) { pm.collectionVariables.set('token', pm.response.text()); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "ines",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "1234",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/authentication",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authentication"
+              ]
+            },
+            "description": "Le jeton reçu est enregistré automatiquement dans la variable token."
+          }
+        },
+        {
+          "name": "2. Obtenir un jeton - JSON (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) { pm.collectionVariables.set('token', pm.response.text()); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Mariem\",\n  \"password\": \"mariem\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/authentication",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authentication"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Mauvais mot de passe (403)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "ines",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "faux",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/authentication",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "authentication"
+              ]
+            }
+          }
+        }
+      ]
+    },
     {
       "name": "1 - Unités d'enseignement",
       "item": [
@@ -317,6 +450,160 @@
           }
         }
       ]
+    },
+    {
+      "name": "4 - Tests de sécurité",
+      "item": [
+        {
+          "name": "POST /unites sans jeton (401)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": 6,\n  \"domaine\": \"Réseaux\",\n  \"responsable\": \"M. Ali\",\n  \"credits\": 4,\n  \"semestre\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /unites jeton invalide (401)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "jeton.invalide.abc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": 6,\n  \"domaine\": \"Réseaux\",\n  \"responsable\": \"M. Ali\",\n  \"credits\": 4,\n  \"semestre\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /unites avec le jeton (201)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": 6,\n  \"domaine\": \"Réseaux\",\n  \"responsable\": \"M. Ali\",\n  \"credits\": 4,\n  \"semestre\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /unites jeton invalide - non sécurisé (200)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "jeton.invalide.abc",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/unites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "unites"
+              ]
+            }
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
 }

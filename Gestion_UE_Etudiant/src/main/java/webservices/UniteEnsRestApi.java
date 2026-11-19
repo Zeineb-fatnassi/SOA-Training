@@ -1,5 +1,6 @@
 package webservices;
 
+import filtres.Secured;
 import entities.UniteEnseignement;
 import metiers.UniteEnseignementBusiness;
 
@@ -23,6 +24,7 @@ public class UniteEnsRestApi {
 
     private UniteEnseignementBusiness business = new UniteEnseignementBusiness();
 
+    @Secured
     @POST
     public Response addUE(UniteEnseignement ue) {
         if (ue == null) {
@@ -59,6 +61,7 @@ public class UniteEnsRestApi {
         return Response.ok(ue).build();
     }
 
+    @Secured
     @DELETE
     @Path("/{code}")
     public Response deleteUE(@PathParam("code") int code) {
@@ -69,6 +72,7 @@ public class UniteEnsRestApi {
                 .entity("UE introuvable : " + code).build();
     }
 
+    @Secured
     @PUT
     @Path("/{code}")
     public Response updateUE(@PathParam("code") int code, UniteEnseignement ue) {
