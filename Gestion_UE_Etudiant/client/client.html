@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche de Module Universitaire</title>
+    <script>
+        var xmlhttp = new XMLHttpRequest();
+
+        function getUEDetails() {
+            var code = document.getElementById("code").value;
+            if (code.trim() === "") {
+                alert("Veuillez saisir un code d'unité d'enseignement");
+                return;
+            }
+
+            var url = "http://localhost:8081/Gestion_UE_VF_war_exploded/rest/unites/interoperabilite/" + code;
+
+            xmlhttp.open('GET', url, true);
+            xmlhttp.send(null);
+        }
+
+        xmlhttp.onreadystatechange = function() {
+            var codeField = document.getElementById("code");
+            var domaineField = document.getElementById("domaine");
+            var responsableField = document.getElementById("responsable");
+            var creditsField = document.getElementById("credits");
+            var semestreField = document.getElementById("semestre");
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    var uniteEns = JSON.parse(xmlhttp.responseText);
+
+                    codeField.value = uniteEns.code || "";
+                    domaineField.value = uniteEns.domaine || "";
+                    responsableField.value = uniteEns.responsable || "";
+                    creditsField.value = uniteEns.credits || "";
+                    semestreField.value = uniteEns.semestre || "";
+                }
+                else {
+                    alert("Erreur : " + xmlhttp.status + " - " + xmlhttp.statusText);
+                    codeField.value = "";
+                    domaineField.value = "";
+                    responsableField.value = "";
+                    creditsField.value = "";
+                    semestreField.value = "";
+                }
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <h1>IESTER - Service UE Universitaires</h1>
+
+    <table>
+        <tr>
+            <td colspan="2"><strong>Saisir Code UE :</strong></td>
+        </tr>
+        <tr>
+            <td width="30%">
+                <label for="code">Code :</label>
+            </td>
+            <td>
+                <input type="text" id="code">
+                <button onclick="getUEDetails()">Rechercher</button>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <th colspan="2">Détails d'Unité d'enseignement</th>
+        </tr>
+
+        <tr>
+            <td><label for="domaine">Domaine :</label></td>
+            <td><input type="text" id="domaine" readonly></td>
+        </tr>
+        <tr>
+            <td><label for="responsable">Responsable :</label></td>
+            <td><input type="text" id="responsable" readonly></td>
+        </tr>
+        <tr>
+            <td><label for="credits">Credits :</label></td>
+            <td><input type="text" id="credits" readonly></td>
+        </tr>
+        <tr>
+            <td><label for="semestre">Semestre :</label></td>
+            <td><input type="text" id="semestre" readonly></td>
+        </tr>
+    </table>
+</body>
+</html>

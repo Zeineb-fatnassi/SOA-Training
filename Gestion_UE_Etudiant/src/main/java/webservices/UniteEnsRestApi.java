@@ -1,6 +1,5 @@
 package webservices;
 
-import filtres.Secured;
 import entities.UniteEnseignement;
 import metiers.UniteEnseignementBusiness;
 
@@ -24,7 +23,6 @@ public class UniteEnsRestApi {
 
     private UniteEnseignementBusiness business = new UniteEnseignementBusiness();
 
-    @Secured
     @POST
     public Response addUE(UniteEnseignement ue) {
         if (ue == null) {
@@ -51,6 +49,25 @@ public class UniteEnsRestApi {
     }
 
     @GET
+    @Path("/interoperabilite/{code}")
+    public Response getUEInteroperabilite(@PathParam("code") String code) {
+        int codeUE;
+        try {
+            codeUE = Integer.parseInt(code.trim());
+        } catch (NumberFormatException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .header("Access-Control-Allow-Origin", "*").build();
+        }
+        UniteEnseignement ue = business.getUEByCode(codeUE);
+        if (ue == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .header("Access-Control-Allow-Origin", "*").build();
+        }
+        return Response.ok(ue)
+                .header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
     @Path("/{code}")
     public Response getUEByCode(@PathParam("code") int code) {
         UniteEnseignement ue = business.getUEByCode(code);
@@ -61,7 +78,6 @@ public class UniteEnsRestApi {
         return Response.ok(ue).build();
     }
 
-    @Secured
     @DELETE
     @Path("/{code}")
     public Response deleteUE(@PathParam("code") int code) {
@@ -72,7 +88,6 @@ public class UniteEnsRestApi {
                 .entity("UE introuvable : " + code).build();
     }
 
-    @Secured
     @PUT
     @Path("/{code}")
     public Response updateUE(@PathParam("code") int code, UniteEnseignement ue) {
