@@ -1,0 +1,349 @@
+{
+  "info": {
+    "name": "Atelier GraphQL - Gestion Ressources pedagogiques",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "graphqlUrl",
+      "value": "http://localhost:8081/WorkshopGraphQL_war_exploded/graphql"
+    }
+  ],
+  "item": [
+    {
+      "name": "Queries",
+      "item": [
+        {
+          "name": "A1. Tous les modules",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getallmodules {\n    matricule\n    nom\n    coefficient\n    volumeHoraire\n    type\n    uniteEnseignement {\n      code\n      domaine\n    }\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "A4. Modules d'un type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getModulesByType(type: PROFESSIONNEL) {\n    matricule\n    nom\n    type\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "A5. Module par matricule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getModuleByMatricule(matricule: \"M101\") {\n    matricule\n    nom\n    uniteEnseignement {\n      code\n      responsable\n    }\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B2. UE par code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getUniteEnseignementByCode(code: 1) {\n    code\n    domaine\n    responsable\n    credits\n    semestre\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B3. UE d'un domaine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getUniteEnseignementsByDomaine(domaine: \"Informatique\") {\n    code\n    domaine\n    responsable\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B4. UE d'un semestre",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  getUniteEnseignementsBySemestre(semestre: 1) {\n    code\n    domaine\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Plusieurs queries dans une seule requete",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "{\n  modules: getallmodules {\n    matricule\n    nom\n  }\n  semestre1: getUniteEnseignementsBySemestre(semestre: 1) {\n    code\n    domaine\n  }\n  semestre2: getUniteEnseignementsBySemestre(semestre: 2) {\n    code\n    domaine\n  }\n  ue: getUniteEnseignementByCode(code: 1) {\n    responsable\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mutations",
+      "item": [
+        {
+          "name": "A2. Creer un module (Boolean)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  addModule(\n    matricule: \"UE123\"\n    libelle: \"SOA\"\n    coef: 2\n    volumeHoraire: 21\n    codeUE: 1\n    type: TRANSVERSAL\n  )\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "A3. Modifier un module",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  updateModule(\n    matricule: \"M101\"\n    libelle: \"Algorithmique\"\n    coef: 3\n    volumeHoraire: 21\n    type: PROFESSIONNEL\n    codeUE: 1\n  ) {\n    matricule\n    nom\n    volumeHoraire\n    type\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "A6. Supprimer un module",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  deleteModule(matricule: \"M102\")\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B1. Creer une UE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  addUniteEnseignement(\n    code: 6\n    domaine: \"Reseaux\"\n    responsable: \"M. Ali\"\n    credits: 4\n    semestre: 2\n  )\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B5. Modifier une UE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  updateUniteEnseignement(\n    code: 6\n    domaine: \"Reseaux\"\n    responsable: \"M. Ali\"\n    credits: 5\n    semestre: 2\n  ) {\n    code\n    credits\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B6. Supprimer une UE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\n  deleteUniteEnseignement(code: 6)\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": [
+                "{{graphqlUrl}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
